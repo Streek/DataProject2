@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pandas = "*"
+numpy = "*"
+scikit-learn = "*"
+sqlalchemy = "*"
+nltk = "*"
+flask = "*"
+flask_restful = "*"
+flask-cors = "*"
+
+[dev-packages]
+ipykernel = "*"
+autopep8 = "*"
+
+[requires]
+python_version = "3.10"
