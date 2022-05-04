@@ -3,6 +3,8 @@ from flask import Flask, request, make_response
 from flask_restful import Resource, Api
 from flask_cors import CORS
 import pickle
+import pandas as pd
+from train_classifier import TrainClassifier
 
 app = Flask(__name__)
 CORS(app)
