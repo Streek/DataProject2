@@ -4,10 +4,11 @@ from flask_restful import Resource, Api
 from flask_cors import CORS
 import pickle
 import pandas as pd
+
 from train_classifier import TrainClassifier
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app)
 api = Api(app)
 
 categories = ['related', 'request', 'offer', 'aid_related', 'medical_help', 'medical_products', 'search_and_rescue', 'security', 'military', 'child_alone', 'water', 'food', 'shelter', 'clothing', 'money', 'missing_people', 'refugees', 'death',
@@ -19,7 +20,7 @@ categories = ['related', 'request', 'offer', 'aid_related', 'medical_help', 'med
 class MachineLearningResponse(Resource):
     def get(self):
         # load text from url
-        text = request.args.get('text')
+        text = request.args.get('text') or "No text provided"
         print(text)
         # predict
         prediction = model.predict([text])
@@ -32,8 +33,8 @@ class MachineLearningResponse(Resource):
         print(prediction_hash)
 
         # return prediction
-        # set Access-Control-Allow-Origin: * in the header of the response
         resp = make_response(json.dumps(prediction_hash))
+        # disable cors
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp
 

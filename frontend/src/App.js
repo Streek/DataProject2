@@ -12,7 +12,9 @@ function App() {
       ? process.env.REMOTE_URL
       : "http://127.0.0.1:5000";
     const result = await axios.get(url + "?text=" + text, {
+      withCredentials: false,
       headers: {
+        "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
     });
