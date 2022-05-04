@@ -1,21 +1,20 @@
 # import libraries
-from sklearn.svm import LinearSVC
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.multioutput import MultiOutputClassifier
-from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import classification_report
-
 from sklearn.ensemble import RandomForestClassifier
 
+import nltk
 from nltk.stem import WordNetLemmatizer
+from nltk import word_tokenize
+
 import pandas as pd  # for the dataframes
+
 import pickle
 
 from sqlalchemy import create_engine
-from nltk import word_tokenize
-import nltk
 
 # download needed libraries
 nltk.download('punkt')
