@@ -1,5 +1,6 @@
 setup: Pipfile
 	pipenv install
+	npm install --prefix ./frontend
 
 process: process_data.py
 	pipenv run python process_data.py
@@ -11,5 +12,4 @@ api: run.py
 	pipenv run python run.py
 
 web:
-	cd frontend
 	npm run start --prefix ./frontend

@@ -12,6 +12,7 @@ nltk = "*"
 flask = "*"
 flask_restful = "*"
 flask-cors = "*"
+gunicorn = "*"
 
 [dev-packages]
 ipykernel = "*"

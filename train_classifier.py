@@ -119,7 +119,10 @@ class TrainClassifier():
         y_pred = cv.predict(X_test)
 
         for column in Y_test.columns:
+            print(column)
+            # get all data for the column in y_pref
             y_pred_column = y_pred[:, Y_train.columns.get_loc(column)]
+
             print(classification_report(
                 Y_test[column], y_pred_column, digits=1, zero_division=0))
 
