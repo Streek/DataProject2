@@ -1,4 +1,5 @@
 import json
+import os
 from flask import Flask, request, make_response
 from flask_restful import Resource, Api
 from flask_cors import CORS
@@ -20,8 +21,9 @@ categories = ['related', 'request', 'offer', 'aid_related', 'medical_help', 'med
 class MachineLearningResponse(Resource):
     def get(self):
         # load text from url
-        text = request.args.get('text') or "No text provided"
-        print(text)
+        text = request.args.get('text')
+        if text is None:
+            text = 'this is a test'
         # predict
         prediction = model.predict([text])
         # convert prediction list to hash of columns
@@ -30,17 +32,25 @@ class MachineLearningResponse(Resource):
             # convert to string
             prediction_hash[categories[i]] = str(prediction[0][i])
 
-        print(prediction_hash)
-
         # return prediction
         resp = make_response(json.dumps(prediction_hash))
         # disable cors
         resp.headers['Access-Control-Allow-Origin'] = '*'
+        # return json
         return resp
 
 
+class HeartBeat(Resource):
+    def get(self):
+        # return heartbeat
+        return 'ok'
+
+
 api.add_resource(MachineLearningResponse, '/')
+api.add_resource(HeartBeat, '/heartbeat')
 
 if __name__ == '__main__':
     model = pickle.load(open('./pickles/pipeline.pkl', 'rb'))
-    app.run(debug=True)
+    # get port server is running on
+    print("Server is running on port", 5000)
+    app.run(debug=True, port=5000)
