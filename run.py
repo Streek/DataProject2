@@ -44,5 +44,5 @@ api.add_resource(MachineLearningResponse, '/')
 if __name__ == '__main__':
     # set list of categories for ease of use.
 
-    model = pickle.load(open('./pickles/cv.pkl', 'rb'))
+    model = pickle.load(open('./pickles/pipeline.pkl', 'rb'))
     app.run(debug=True)
