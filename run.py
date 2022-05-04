@@ -3,9 +3,6 @@ from flask import Flask, request, make_response
 from flask_restful import Resource, Api
 from flask_cors import CORS
 import pickle
-import pandas as pd
-
-from train_classifier import TrainClassifier
 
 app = Flask(__name__)
 CORS(app)
@@ -42,7 +39,5 @@ class MachineLearningResponse(Resource):
 api.add_resource(MachineLearningResponse, '/')
 
 if __name__ == '__main__':
-    # set list of categories for ease of use.
-
     model = pickle.load(open('./pickles/pipeline.pkl', 'rb'))
     app.run(debug=True)
