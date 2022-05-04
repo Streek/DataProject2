@@ -50,7 +50,7 @@ api.add_resource(MachineLearningResponse, '/')
 api.add_resource(HeartBeat, '/heartbeat')
 
 if __name__ == '__main__':
-    model = pickle.load(open('./pickles/pipeline.pkl', 'rb'))
+    model = pickle.load(open('./pickles/cv.pkl', 'rb'))
     # get port server is running on
     print("Server is running on port", 5000)
     app.run(debug=True, port=5000)

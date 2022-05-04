@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import "./App.css";
 
 function Table(props) {
@@ -36,7 +37,13 @@ function Table(props) {
                         <td className="py-4 px-6 text-sm font-medium text-gray-900 w-2/3 whitespace-nowrap dark:text-white">
                           {key}
                         </td>
-                        <td className="py-4 px-6 text-sm font-medium text-gray-900  w-1/3 whitespace-nowrap dark:text-white">
+                        <td
+                          className={classNames({
+                            "py-4 px-6 text-sm font-medium w-1/3 whitespace-nowrap font-extrabold": true,
+                            "text-red-800": value === "0",
+                            "text-green-800": value !== "0",
+                          })}
+                        >
                           {value === "0" ? "No" : "Yes"}
                         </td>
                         <td></td>
