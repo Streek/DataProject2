@@ -57,7 +57,8 @@ class TrainClassifier():
         pipeline = Pipeline([
             ('vect', CountVectorizer(tokenizer=self.tokenizer)),
             ('tfidf', TfidfTransformer()),
-            ('clf', MultiOutputClassifier(RandomForestClassifier(random_state=42)))
+            ('clf', MultiOutputClassifier(
+                RandomForestClassifier(n_jobs=-1, random_state=42)))
         ])
 
         return pipeline
@@ -67,7 +68,7 @@ class TrainClassifier():
         This function trains the pipeline
         '''
         X_train, X_test, Y_train, Y_test = train_test_split(
-            X, Y, random_state=42)
+            X, Y, random_state=42, test_size=0.45)
 
         pipeline.fit(X_train, Y_train)
 
@@ -91,11 +92,19 @@ class TrainClassifier():
 
         return y_pred
 
-    def save_model(self, name, pipeline):
+    def save_model(self, name, pipeline, clean=True):
         '''
         This function saves the model
         '''
-        pickle.dump(pipeline, open('./pickles/'+name+'.pkl', 'wb'))
+        # remove stop_words_ on pipeline
+
+        if clean:
+            pipeline.named_steps['vect'].stop_words_ = None
+            pipeline.named_steps['tfidf'].stop_words_ = None
+            pipeline.named_steps['clf'].stop_words_ = None
+            pipeline.named_steps['clf'].estimator.stop_words_ = None
+        # breakpoint()
+        pickle.dump(pipeline, open('./pickles/'+name+'.pkl', 'wb'), protocol=2)
 
     def train_grid_search(self, pipeline, X_train, Y_train):
         '''
@@ -106,10 +115,10 @@ class TrainClassifier():
             'clf__estimator__min_samples_split': [2, 3, 4]
         }
 
-        cv = GridSearchCV(pipeline, param_grid=parameters)
+        cv = GridSearchCV(pipeline, param_grid=parameters, n_jobs=-1, )
         cv.fit(X_train, Y_train)
 
-        return cv
+        return cv.best_estimator_
 
     def test_grid_search(self, cv, X_test, Y_test):
         '''
@@ -141,11 +150,10 @@ if __name__ == '__main__':
         pipeline, X, Y)
     print('===\nTesting Model...\n===')
     train_classifier.test_pipeline(pipeline, X_test, Y_test, Y_train)
+    train_classifier.save_model("pipeline", pipeline)
     print('===\nTraining GridSearch Model...\n===')
     cv = train_classifier.train_grid_search(pipeline, X_train, Y_train)
     print('===\nTesting GridSearch Model...\n===')
     train_classifier.test_grid_search(cv, X_test, Y_test)
-    print('===\n Saving Models...\n===')
-    train_classifier.save_model("pipeline", pipeline)
-    train_classifier.save_model("cv", cv)
+    train_classifier.save_model("cv", cv, False)
     print('===============\n COMPLETE\n===============')
