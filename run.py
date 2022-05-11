@@ -19,6 +19,10 @@ categories = ['related', 'request', 'offer', 'aid_related', 'medical_help', 'med
 
 
 class MachineLearningResponse(Resource):
+    """
+    This is the root path of the web server.
+    """
+
     def get(self):
         # load text from url
         text = request.args.get('text')
@@ -41,6 +45,10 @@ class MachineLearningResponse(Resource):
 
 
 class HeartBeat(Resource):
+    """
+    This is the ping/heartbeat path of the web server.
+    """
+
     def get(self):
         # return heartbeat
         return 'ok'
