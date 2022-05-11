@@ -103,7 +103,6 @@ class TrainClassifier():
             pipeline.named_steps['tfidf'].stop_words_ = None
             pipeline.named_steps['clf'].stop_words_ = None
             pipeline.named_steps['clf'].estimator.stop_words_ = None
-        # breakpoint()
         pickle.dump(pipeline, open('./pickles/'+name+'.pkl', 'wb'), protocol=2)
 
     def train_grid_search(self, pipeline, X_train, Y_train):
@@ -115,9 +114,10 @@ class TrainClassifier():
             'clf__estimator__min_samples_split': [2, 3, 4]
         }
 
-        cv = GridSearchCV(pipeline, param_grid=parameters, n_jobs=-1, )
+        cv = GridSearchCV(pipeline, param_grid=parameters, n_jobs=-1)
         cv.fit(X_train, Y_train)
 
+        breakpoint()
         return cv.best_estimator_
 
     def test_grid_search(self, cv, X_test, Y_test):
