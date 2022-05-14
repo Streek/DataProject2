@@ -25,10 +25,9 @@ F1 scoring is all over due to the imbalanced data, recall on some categories is 
 
 ## Screenshots of the App
 
-![Screenshot1]()
-![Screenshot2]()
-![Screenshot3]()
-![Screenshot4]()
+<img width="1515" alt="image" src="https://user-images.githubusercontent.com/55346/168404777-9a701805-09da-4ed6-9b62-46b5164d0fab.png">
+<img width="1516" alt="image" src="https://user-images.githubusercontent.com/55346/168404787-555bc5b8-930c-4979-9a99-965447fc9ff0.png">
+<img width="699" alt="image" src="https://user-images.githubusercontent.com/55346/168404802-344fedb2-a51a-406e-bc6a-f8801ed12ba0.png">
 
 ## Visualization
 
