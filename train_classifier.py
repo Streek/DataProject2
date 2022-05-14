@@ -1,10 +1,15 @@
 # import libraries
+from turtle import title
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import classification_report
 from sklearn.ensemble import RandomForestClassifier
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 
 import nltk
 from nltk.stem import WordNetLemmatizer
@@ -74,6 +79,17 @@ class TrainClassifier():
 
         return X_train, X_test, Y_train, Y_test
 
+    def generate_heatmap(self, report, label):
+        '''
+        This function generates the heatmap
+        '''
+        print(report)
+        sns.heatmap(pd.DataFrame(
+            report).iloc[:-1, :].T, annot=True).set(title=label)
+        # save plot to file
+        plt.savefig('./frontend/public/plots/'+label+'.png')
+        plt.clf()
+
     def test_pipeline(self, pipeline, X_test, Y_test, Y_train):
         '''
         This function tests the pipeline
@@ -81,14 +97,11 @@ class TrainClassifier():
         y_pred = pipeline.predict(X_test)
 
         for column in Y_test.columns:
-            print(column)
             # get all data for the column in y_pref
             y_pred_column = y_pred[:, Y_train.columns.get_loc(column)]
 
-            print(classification_report(
-                Y_test[column], y_pred_column, digits=1, zero_division=0))
-
-        print(y_pred.shape)
+            self.generate_heatmap(classification_report(
+                Y_test[column], y_pred_column, digits=1, zero_division=0, output_dict=True), column)
 
         return y_pred
 
@@ -127,14 +140,11 @@ class TrainClassifier():
         y_pred = cv.predict(X_test)
 
         for column in Y_test.columns:
-            print(column)
             # get all data for the column in y_pref
             y_pred_column = y_pred[:, Y_train.columns.get_loc(column)]
 
-            print(classification_report(
-                Y_test[column], y_pred_column, digits=1, zero_division=0))
-
-        print(y_pred.shape)
+            self.generate_heatmap(classification_report(
+                Y_test[column], y_pred_column, digits=1, zero_division=0, output_dict=True), column + "_cv")
 
         return y_pred
 
@@ -148,6 +158,7 @@ if __name__ == '__main__':
     print('===\nTraining  Model...\n===')
     X_train, X_test, Y_train, Y_test = train_classifier.train_pipeline(
         pipeline, X, Y)
+
     print('===\nTesting Model...\n===')
     train_classifier.test_pipeline(pipeline, X_test, Y_test, Y_train)
     train_classifier.save_model("pipeline", pipeline)
