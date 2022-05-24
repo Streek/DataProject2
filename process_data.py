@@ -1,16 +1,19 @@
 # import libraries
+import sys
 import pandas as pd  # for the dataframes
 from sqlalchemy import create_engine  # database
 
 
 class ProcessData():
-    def load_dataset(self):
+    def load_dataset(self, messages_path, categories_path):
         '''
         This function loads the CSV files into a dataframe
         '''
+
+        #
         # load the dataset from csv_files
-        messages = pd.read_csv('data/messages.csv')
-        categories = pd.read_csv('data/categories.csv')
+        messages = pd.read_csv(messages_filepath, encoding='utf-8')
+        categories = pd.read_csv(categories_filepath, encoding='utf-8')
 
         return messages, categories
 
@@ -61,6 +64,9 @@ class ProcessData():
         # Check how many duplicates are in this dataset.
         df.duplicated().sum()
 
+        # turn 2s into 1s
+        df.replace(2, 1, inplace=True)
+
         # - Drop the duplicates.
         df.drop_duplicates(inplace=True)
 
@@ -70,11 +76,11 @@ class ProcessData():
 
         return df
 
-    def save_to_database(self, df):
+    def save_to_database(self, df, database_filepath):
         '''
         This function saves the dataframe to a database
         '''
-        engine = create_engine('sqlite:///development.db')
+        engine = create_engine('sqlite:///'+database_filepath)
         # delete database if it exists
         engine.execute('DROP TABLE IF EXISTS cleaned_data')
         df.to_sql('cleaned_data', engine, index=False)
@@ -90,12 +96,16 @@ class ProcessData():
 
 
 if __name__ == '__main__':
+    # load data from command line arguments
+    messages_filepath, categories_filepath, database_filepath = sys.argv[1:]
+
     print('===============\nProcessing data...\n===============')
     # build the class and run the functions
     process_data = ProcessData()
-    messages, categories = process_data.load_dataset()
+    messages, categories = process_data.load_dataset(
+        messages_filepath, categories_filepath)
     df = process_data.merge_dataset(messages, categories)
     df = process_data.build_categories(df)
     df = process_data.clean_data(df)
-    process_data.save_to_database(df)
+    process_data.save_to_database(df, database_filepath)
     print('\n=====\nData has been cleaned and saved to the database.\n=====')

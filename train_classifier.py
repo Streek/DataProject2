@@ -1,4 +1,5 @@
 # import libraries
+import sys
 from turtle import title
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
@@ -28,11 +29,11 @@ nltk.download('omw-1.4')
 
 
 class TrainClassifier():
-    def load_data(self):
+    def load_data(self, database_filepath):
         '''
         This function loads data from the database and returns our feature and target data
         '''
-        engine = create_engine('sqlite:///development.db')
+        engine = create_engine('sqlite:///' + database_filepath)
         df = pd.read_sql_table('cleaned_data', engine)
 
         # Define feature and target variables X and Y
@@ -130,7 +131,6 @@ class TrainClassifier():
         cv = GridSearchCV(pipeline, param_grid=parameters, n_jobs=-1)
         cv.fit(X_train, Y_train)
 
-        breakpoint()
         return cv.best_estimator_
 
     def test_grid_search(self, cv, X_test, Y_test):
@@ -150,10 +150,12 @@ class TrainClassifier():
 
 
 if __name__ == '__main__':
+    # database_filepath from command line argument
+    database_filepath = sys.argv[1]
     print('===============\nTrain and Test Model Process...\n===============')
     # build the class and run the functions
     train_classifier = TrainClassifier()
-    X, Y = train_classifier.load_data()
+    X, Y = train_classifier.load_data(database_filepath)
     pipeline = train_classifier.build_pipeline()
     print('===\nTraining  Model...\n===')
     X_train, X_test, Y_train, Y_test = train_classifier.train_pipeline(
