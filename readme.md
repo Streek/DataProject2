@@ -1,5 +1,9 @@
 # Emergency Messages Classifier
 
+## About this project
+
+This project classifies emergency messages that were sent to and from emergency agencies like FEMA. The idea behind this is to make seeing what a message might be about without having to first read the whole message in context. In emergency situations messages sent be it from text, voice, etc. are all about speed. The longer it takes to quantify the content of a message the longer it takes for a responce to be made. The goal is to reduce the receipt to response time.
+
 ## Abstract
 
 This project is a very simple machine learning classifier using TF-IDF and a few other components to classify text messages that were sent during emergency situations. These situations could be fires, floods, etc. I am attempting to classify the text messages based on 36 unique criteria.
